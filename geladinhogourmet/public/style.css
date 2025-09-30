@@ -76,28 +76,3 @@ button {
 .justificado {
   text-align: justify;
 }
-/* Estilo para os pedidos no painel admin */
-.pedido {
-  background: #fff;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  font-size: 14px;
-  line-height: 1.4;
-  text-align: left;
-}
-
-.pedido strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 15px;
-  color: #333;
-}
-
-.pedido em {
-  display: block;
-  margin-top: 8px;
-  font-weight: bold;
-  color: #e94b63; /* mesma cor do tema */
-}
