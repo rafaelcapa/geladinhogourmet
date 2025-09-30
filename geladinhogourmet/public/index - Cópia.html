@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Geladinho Gourmet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e94b63; /* cor igual ao ícone */
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #e94b63;
+      margin-top: 5px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+    }
+    #addSabor {
+      background: #25d366;
+      color: #fff;
+    }
+    #addSabor:hover {
+      background: #1ebf5d;
+    }
+    .btn-remover {
+      background: #e63946;
+      color: #fff;
+      margin-top: 5px;
+    }
+    .btn-remover:hover {
+      background: #c71c2c;
+    }
+    .sabor-item {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    #copiarPix {
+      background: #555;
+      color: #fff;
+      margin-top: 8px;
+    }
+    #enviarPedido {
+      background: #25d366; /* Verde WhatsApp */
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      width: 100%;
+    }
+    #enviarPedido:hover {
+      background: #1ebf5d;
+    }
+    .justificado {
+      text-align: justify;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="text-align:center;">
+      <img src="icon.png" alt="Ícone Geladinho" width="80" style="border-radius:50%; margin-bottom:0;">
+    </div>
+    <h1>Faça seu pedido</h1>
+
+    <form id="pedidoForm">
+      <div id="sabores-container"></div>
+
+      <button type="button" id="addSabor">+ Adicionar outro sabor</button>
+
+      <label>Seu nome:</label>
+      <input type="text" id="nome" required>
+
+      <label>Setor (opcional):</label>
+      <input type="text" id="setor">
+
+      <p class="justificado">
+        <strong>Importante:</strong> Ao abrir o WhatsApp, envie seu comprovante do PIX abaixo da mensagem automática.
+      </p>
+
+      <h3>Total: R$ <span id="totalSpan">0,00</span></h3>
+
+      <div style="text-align:center;">
+        <img src="QRCode.png" alt="QR Code PIX" width="200"><br>
+        <button type="button" id="copiarPix">Copiar PIX (CPF: 03945649447)</button>
+      </div>
+
+      <br>
+      <button type="submit" id="enviarPedido">📲 Enviar Pedido no WhatsApp</button>
+    </form>
+  </div>
+
+  <script>
+    const estoque = [
+      { nome: "Morango", preco: 10, qtd: 3 },
+      { nome: "Alpino", preco: 8, qtd: 2 },
+      { nome: "Pudim", preco: 10, qtd: 5 },
+      { nome: "Romeu & Julieta", preco: 10, qtd: 5 },
+      { nome: "Tortinha de Limão", preco: 8, qtd: 3 }
+    ];
+
+    const numero = "558199527355"; // seu WhatsApp
+    const container = document.getElementById("sabores-container");
+
+    function atualizarTotal() {
+      let total = 0;
+      document.querySelectorAll(".sabor-item").forEach(item => {
+        const select = item.querySelector(".sabor");
+        const qtdInput = item.querySelector(".quantidade");
+        const sabor = estoque.find(s => s.nome === select.value);
+        const qtd = parseInt(qtdInput.value) || 0;
+
+        if (qtd > sabor.qtd) {
+          qtdInput.value = sabor.qtd;
+        }
+
+        if (sabor) total += sabor.preco * qtd;
+      });
+      document.getElementById("totalSpan").innerText = total.toFixed(2).replace(".", ",");
+    }
+
+    function atualizarOpcoes() {
+      const usados = Array.from(document.querySelectorAll(".sabor")).map(s => s.value);
+      document.querySelectorAll(".sabor").forEach(select => {
+        Array.from(select.options).forEach(opt => {
+          if (usados.includes(opt.value) && opt.value !== select.value) {
+            opt.disabled = true;
+          } else {
+            opt.disabled = false;
+          }
+        });
+
+        const qtdInput = select.parentElement.querySelector(".quantidade");
+        const sabor = estoque.find(s => s.nome === select.value);
+        if (sabor) {
+          const totalSelecionado = Array.from(document.querySelectorAll(".sabor-item"))
+            .filter(item => item.querySelector(".sabor").value === sabor.nome)
+            .reduce((acc, item) => acc + parseInt(item.querySelector(".quantidade").value || 0), 0);
+          qtdInput.max = Math.max(0, sabor.qtd - (totalSelecionado - parseInt(qtdInput.value || 0)));
+        }
+      });
+    }
+
+    function adicionarSabor() {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("sabor-item");
+
+      let options = estoque.map(s =>
+        `<option value="${s.nome}" data-preco="${s.preco}" data-qtd="${s.qtd}">
+          ${s.nome} (R$${s.preco},00) - ${s.qtd} disponíveis
+        </option>`).join("");
+
+      // Primeira opção começa com 1, demais começam com 0
+      const valorInicialQtd = container.children.length === 0 ? 1 : 0;
+
+      wrapper.innerHTML = `
+        <label>Sabor:</label>
+        <select class="sabor" required>${options}</select>
+        <label>Quantidade:</label>
+        <input type="number" class="quantidade" min="0" value="${valorInicialQtd}" required>
+      `;
+
+      if (container.children.length >= 1) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-remover";
+        btn.textContent = "Remover sabor";
+        btn.addEventListener("click", () => {
+          wrapper.remove();
+          atualizarTotal();
+          atualizarOpcoes();
+        });
+        wrapper.appendChild(btn);
+      }
+
+      container.appendChild(wrapper);
+
+      const select = wrapper.querySelector(".sabor");
+      const qtdInput = wrapper.querySelector(".quantidade");
+
+      function atualizarMaxQtd() {
+        atualizarOpcoes();
+        atualizarTotal();
+      }
+
+      select.addEventListener("change", atualizarMaxQtd);
+      qtdInput.addEventListener("input", atualizarTotal);
+
+      atualizarMaxQtd();
+    }
+
+    document.getElementById("addSabor").addEventListener("click", adicionarSabor);
+
+    document.getElementById("copiarPix").addEventListener("click", () => {
+      navigator.clipboard.writeText("03945649447");
+      alert("Chave PIX (CPF: 03945649447) copiada!");
+    });
+
+    document.getElementById("pedidoForm").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const setor = document.getElementById("setor").value;
+
+      let mensagem = `Olá, Me chamo ${nome}`;
+      if (setor) mensagem += `, do setor ${setor}`;
+      mensagem += `%0A%0AQuero:%0A`;
+
+      document.querySelectorAll(".sabor-item").forEach(item => {
+        const select = item.querySelector(".sabor");
+        const qtdInput = item.querySelector(".quantidade");
+        const qtd = parseInt(qtdInput.value) || 0;
+        if (qtd > 0) {
+          mensagem += `* ${qtd}x ${select.value}%0A`;
+        }
+      });
+
+      mensagem += `%0ATotal: R$ ${document.getElementById("totalSpan").innerText}%0A%0ASegue meu comprovante do PIX:`;
+
+      const url = `https://wa.me/${numero}?text=${mensagem}`;
+      window.open(url, "_blank");
+    });
+
+    adicionarSabor(); // adiciona o primeiro sabor
+  </script>
+</body>
+</html>

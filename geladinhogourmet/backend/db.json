@@ -1,0 +1,53 @@
+{
+  "estoque": [
+    {
+      "nome": "Alpino",
+      "preco": 8,
+      "qtd": 0
+    },
+    {
+      "nome": "Pudim",
+      "preco": 10,
+      "qtd": 5
+    },
+    {
+      "nome": "Romeu & Julieta",
+      "preco": 10,
+      "qtd": 5
+    },
+    {
+      "nome": "Tortinha de Limão",
+      "preco": 8,
+      "qtd": 3
+    },
+    {
+      "nome": "coco",
+      "preco": 20,
+      "qtd": 1
+    }
+  ],
+  "pedidos": [
+    {
+      "nome": "rafael",
+      "setor": "",
+      "itens": [
+        {
+          "nome": "Alpino",
+          "qtd": 1
+        }
+      ],
+      "total": "8,00"
+    },
+    {
+      "nome": "rafael",
+      "setor": "",
+      "itens": [
+        {
+          "nome": "Alpino",
+          "qtd": 1
+        }
+      ],
+      "total": "8,00"
+    }
+  ]
+}

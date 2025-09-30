@@ -1,0 +1,15 @@
+{
+  "name": "Geladinho Gourmet",
+  "short_name": "Geladinho",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e94b63",
+  "theme_color": "#e94b63",
+  "icons": [
+    {
+      "src": "pwa-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

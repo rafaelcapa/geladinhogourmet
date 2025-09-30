@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Admin - Geladinho Gourmet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Painel Admin</h1>
+
+    <!-- Login -->
+    <div id="login">
+      <label>Usuário:</label>
+      <input type="text" id="user" placeholder="Usuário">
+      <label>Senha:</label>
+      <input type="password" id="pass" placeholder="Senha">
+      <button onclick="login()">Entrar</button>
+      <p id="loginMsg"></p>
+    </div>
+
+    <!-- Painel -->
+    <div id="adminPanel" style="display:none;">
+      <h2>Gerenciar Estoque</h2>
+      <table id="estoqueTabela" border="1" style="width:100%; text-align:center;">
+        <thead>
+          <tr>
+            <th>Sabor</th>
+            <th>Preço (R$)</th>
+            <th>Quantidade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button onclick="adicionarLinha()">+ Adicionar Sabor</button>
+      <button onclick="salvarEstoque()">💾 Salvar Alterações</button>
+
+      <h2>Pedidos Recebidos</h2>
+      <ul id="listaPedidos"></ul>
+    </div>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>

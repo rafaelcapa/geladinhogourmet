@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Geladinho Gourmet</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div style="text-align:center;">
+      <img src="icon.png" alt="Ícone Geladinho" width="80" style="border-radius:50%; margin-bottom:0;">
+    </div>
+    <h1>Faça seu pedido</h1>
+
+    <form id="pedidoForm">
+      <div id="sabores-container"></div>
+
+      <button type="button" id="addSabor">+ Adicionar outro sabor</button>
+
+      <label>Seu nome:</label>
+      <input type="text" id="nome" required>
+
+      <label>Setor (opcional):</label>
+      <input type="text" id="setor">
+
+      <p class="justificado">
+        <strong>Importante:</strong> Ao abrir o WhatsApp, envie seu comprovante do PIX abaixo da mensagem automática.
+      </p>
+
+      <h3>Total: R$ <span id="totalSpan">0,00</span></h3>
+
+      <div style="text-align:center;">
+        <img src="QRCode.png" alt="QR Code PIX" width="200"><br>
+        <button type="button" id="copiarPix">Copiar PIX (CPF: 03945649447)</button>
+      </div>
+
+      <br>
+      <button type="submit" id="enviarPedido">📲 Enviar Pedido no WhatsApp</button>
+    </form>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

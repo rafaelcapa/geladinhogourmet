@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #e94b63;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+}
+h1 {
+  text-align: center;
+  color: #e94b63;
+  margin-top: 5px;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+#addSabor {
+  background: #25d366;
+  color: #fff;
+}
+#addSabor:hover {
+  background: #1ebf5d;
+}
+.btn-remover {
+  background: #e63946;
+  color: #fff;
+  margin-top: 5px;
+}
+.btn-remover:hover {
+  background: #c71c2c;
+}
+.sabor-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+#copiarPix {
+  background: #555;
+  color: #fff;
+  margin-top: 8px;
+}
+#enviarPedido {
+  background: #25d366;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  width: 100%;
+}
+#enviarPedido:hover {
+  background: #1ebf5d;
+}
+.justificado {
+  text-align: justify;
+}
