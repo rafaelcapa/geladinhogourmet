@@ -141,8 +141,9 @@ document.getElementById("pedidoForm").addEventListener("submit", async e => {
 
     if (data.success) {
       // 🚀 Só abre WhatsApp se backend confirmar
-      const url = `https://wa.me/${numero}?text=${mensagem}`;
-      window.open(url, "_blank");
+    const url = `https://api.whatsapp.com/send?phone=${numero}&text=${mensagem}`;
+    window.location.href = url;
+
 
       // Recarrega estoque atualizado
       carregarEstoque();
@@ -157,5 +158,6 @@ document.getElementById("pedidoForm").addEventListener("submit", async e => {
 
 // 🚀 Carrega o estoque do backend ao abrir a página
 carregarEstoque();
+
 
 
