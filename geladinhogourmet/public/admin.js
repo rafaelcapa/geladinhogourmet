@@ -84,19 +84,35 @@ function carregarPedidos() {
     .then(data => {
       const lista = document.getElementById("listaPedidos");
       lista.innerHTML = "";
+
       data.forEach((pedido, i) => {
+        // garante que é objeto
+        if (typeof pedido === "string") {
+          pedido = JSON.parse(pedido);
+        }
+
+        // monta texto formatado
+        let texto = `${pedido.nome} setor ${pedido.setor || "N/D"}<br>`;
+        pedido.itens.forEach(item => {
+          texto += `${item.qtd}x ${item.nome}<br>`;
+        });
+        texto += `R$ ${pedido.total}`;
+
+        // cria <li>
         const li = document.createElement("li");
-        li.innerText = JSON.stringify(pedido);
-        const btn = document.createElement("button");
-        btn.innerText = "Apagar";
-        btn.onclick = () => apagarPedido(i);
-        li.appendChild(btn);
+        li.innerHTML = `
+          <div style="margin-bottom:10px;">
+            ${texto}
+            <br>
+            <button onclick="apagarPedido(${i})">Apagar</button>
+          </div>
+        `;
         lista.appendChild(li);
       });
     });
 }
-
 function apagarPedido(index) {
   fetch(`/pedidos/${index}`, { method: "DELETE" })
     .then(() => carregarPedidos());
 }
+
