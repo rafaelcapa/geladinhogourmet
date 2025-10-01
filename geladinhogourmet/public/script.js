@@ -61,12 +61,18 @@ function adicionarSabor() {
 
   const valorInicialQtd = container.children.length === 0 ? 1 : 0;
 
-  wrapper.innerHTML = `
-    <label>Sabor:</label>
-    <select class="sabor" required>${options}</select>
-    <label>Quantidade:</label>
-    <input type="number" class="quantidade" min="0" value="${valorInicialQtd}" required>
-  `;
+const saborInicial = estoque[0]; // só para pegar um valor inicial
+let optionsQtd = "";
+for (let i = 0; i <= saborInicial.qtd; i++) {
+  optionsQtd += `<option value="${i}" ${i === valorInicialQtd ? "selected" : ""}>${i}</option>`;
+}
+
+wrapper.innerHTML = `
+  <label>Sabor:</label>
+  <select class="sabor" required>${options}</select>
+  <label>Quantidade:</label>
+  <select class="quantidade" required>${optionsQtd}</select>
+`;
 
   if (container.children.length >= 1) {
     const btn = document.createElement("button");
@@ -158,6 +164,7 @@ document.getElementById("pedidoForm").addEventListener("submit", async e => {
 
 // 🚀 Carrega o estoque do backend ao abrir a página
 carregarEstoque();
+
 
 
 
