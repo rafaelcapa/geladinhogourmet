@@ -1,5 +1,5 @@
 let estoque = [];
-const numero = "558199527355"; // seu WhatsApp
+const numero = "5581999527355"; // seu WhatsApp correto
 const container = document.getElementById("sabores-container");
 
 async function carregarEstoque() {
@@ -138,17 +138,24 @@ document.getElementById("pedidoForm").addEventListener("submit", async e => {
     });
     const data = await resp.json();
     console.log("✅ Resposta do backend:", data);
+
+    if (data.success) {
+      // 🚀 Só abre WhatsApp se backend confirmar
+      const url = `https://wa.me/${numero}?text=${mensagem}`;
+      window.open(url, "_blank");
+
+      // Recarrega estoque atualizado
+      carregarEstoque();
+    } else {
+      alert("❌ Erro: não foi possível registrar o pedido.");
+    }
   } catch (err) {
     console.error("❌ Erro ao enviar pedido:", err);
+    alert("Falha na conexão com o servidor.");
   }
-
-  // 🚀 Abre WhatsApp
-  const url = `https://wa.me/${numero}?text=${mensagem}`;
-  window.open(url, "_blank");
-
-  // Recarrega estoque atualizado
-  carregarEstoque();
 });
 
 // 🚀 Carrega o estoque do backend ao abrir a página
 carregarEstoque();
+
+
