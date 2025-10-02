@@ -100,4 +100,82 @@ function adicionarSabor() {
       wrapper.remove();
       atualizarOpcoes();
     });
-    wrapper.appendChild(bt
+    wrapper.appendChild(btn);
+  }
+
+  container.appendChild(wrapper);
+
+  const select = wrapper.querySelector(".sabor");
+  const qtdSelect = wrapper.querySelector(".quantidade");
+
+  select.addEventListener("change", atualizarOpcoes);
+  qtdSelect.addEventListener("change", atualizarTotal);
+
+  atualizarOpcoes();
+}
+
+document.getElementById("addSabor").addEventListener("click", adicionarSabor);
+
+document.getElementById("copiarPix").addEventListener("click", () => {
+  navigator.clipboard.writeText("03945649447");
+  alert("Chave PIX (CPF: 03945649447) copiada!");
+});
+
+document.getElementById("pedidoForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const nome = document.getElementById("nome").value;
+  const setor = document.getElementById("setor").value;
+
+  let mensagem = `Olá, Me chamo ${nome}`;
+  if (setor) mensagem += `, do setor ${setor}`;
+  mensagem += `%0A%0AQuero:%0A`;
+
+  const itens = [];
+  document.querySelectorAll(".sabor-item").forEach(item => {
+    const select = item.querySelector(".sabor");
+    const qtdSelect = item.querySelector(".quantidade");
+    const qtd = parseInt(qtdSelect.value) || 0;
+    if (qtd > 0) {
+      mensagem += `* ${qtd}x ${select.value}%0A`;
+      itens.push({ nome: select.value, qtd });
+    }
+  });
+
+  // 🚨 validação: não deixa pedido vazio
+  if (itens.length === 0) {
+    alert("Pedido inválido: adicione pelo menos 1 sabor.");
+    return;
+  }
+
+  const total = document.getElementById("totalSpan").innerText;
+  mensagem += `%0ATotal: R$ ${total}%0A%0ASegue meu comprovante do PIX:`;
+
+  // 🚀 Envia para backend
+  try {
+    console.log("🔄 Enviando pedido para backend:", { nome, setor, itens, total });
+    const resp = await fetch("/pedido", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, setor, itens, total })
+    });
+    const data = await resp.json();
+    console.log("✅ Resposta do backend:", data);
+
+    if (data.success) {
+      // abre WhatsApp (compatível com celular e desktop)
+      const url = `https://api.whatsapp.com/send?phone=${numero}&text=${mensagem}`;
+      window.location.href = url;
+
+      carregarEstoque(); // recarrega estoque
+    } else {
+      alert("❌ Erro: não foi possível registrar o pedido.");
+    }
+  } catch (err) {
+    console.error("❌ Erro ao enviar pedido:", err);
+    alert("Falha na conexão com o servidor.");
+  }
+});
+
+// 🚀 Carrega estoque ao abrir
+carregarEstoque();
